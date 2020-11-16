@@ -18,6 +18,10 @@ module ActiveAdmin
           I18n.t("active_admin.main_content", model: title).html_safe
         end
 
+        def topbar_content
+          I18n.t("active_admin.topbar_content", model: title).html_safe
+        end
+
         private
 
         delegate :active_admin_config, :controller, :params, to: :helpers
@@ -80,6 +84,7 @@ module ActiveAdmin
         def build_page_content
           build_flash_messages
           div id: "active_admin_content", class: (skip_sidebar? ? "without_sidebar" : "with_sidebar") do
+            build_topbar_content_wrapper if assigns[:index_topbar]
             build_main_content_wrapper
             sidebar sidebar_sections_for_action, id: "sidebar" unless skip_sidebar?
           end
@@ -99,6 +104,14 @@ module ActiveAdmin
           div id: "main_content_wrapper" do
             div id: "main_content" do
               main_content
+            end
+          end
+        end
+
+        def build_topbar_content_wrapper
+          div id: "main_content_wrapper", class: "topbar_content_wrapper" do
+            div id: "main_content", class: "topbar_content" do
+              render partial: assigns[:index_topbar]
             end
           end
         end
